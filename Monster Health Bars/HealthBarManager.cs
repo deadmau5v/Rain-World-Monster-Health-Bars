@@ -1,152 +1,245 @@
 using System.Collections.Generic;
 using UnityEngine;
+using RWCustom;
 
 namespace Monster_Health_Bars
 {
     public static class HealthBarManager
     {
-        private static Dictionary<Creature, HealthBarData> _healthBars = new Dictionary<Creature, HealthBarData>();
+        private static Dictionary<Creature, HealthBarData> healthBars = new Dictionary<Creature, HealthBarData>();
 
-        public static void UpdateCreature(Creature creature)
-        {
-            if (creature == null || creature.room == null) return;
-            
-            // 检查生物是否存活
-            if (!creature.State.alive) return;
-
-            if (!_healthBars.ContainsKey(creature))
-            {
-                _healthBars[creature] = new HealthBarData(creature);
-            }
-            
-            _healthBars[creature].Update();
-        }
+        // 已弃用 - 使用 DrawHealthBars 代替
+        // public static void UpdateCreature(Creature creature)
+        // {
+        //     if (creature == null || creature.room == null) return;
+        //
+        //     // 检查生物是否存活
+        //     if (!creature.State.alive) return;
+        //
+        //     if (!healthBars.ContainsKey(creature))
+        //     {
+        //         healthBars[creature] = new HealthBarData(creature);
+        //     }
+        //
+        //     healthBars[creature].Update();
+        // }
 
         public static void DrawHealthBars(Room room, RoomCamera camera, float timeStacker)
         {
+            // 添加更严格的空值检查
             if (room == null || camera == null) return;
+            if (room.abstractRoom == null || room.abstractRoom.creatures == null) return;
+            if (camera.hud == null || camera.hud.fContainers == null || camera.hud.fContainers.Length == 0) return;
 
             // 清理已死亡或离开房间的生物
             List<Creature> toRemove = new List<Creature>();
-            foreach (var kvp in _healthBars)
+            foreach (var kvp in healthBars)
             {
-                if (kvp.Key.room != room || !kvp.Key.State.alive || kvp.Key.slatedForDeletetion)
+                if (kvp.Key == null || kvp.Key.room != room || !kvp.Key.State.alive || kvp.Key.slatedForDeletetion)
                 {
+                    if (kvp.Value != null)
+                    {
+                        kvp.Value.RemoveSprites();
+                    }
                     toRemove.Add(kvp.Key);
                 }
             }
             foreach (var creature in toRemove)
             {
-                _healthBars.Remove(creature);
+                healthBars.Remove(creature);
             }
 
             // 更新并绘制当前房间的生物血条
-            foreach (var creature in room.abstractRoom.creatures)
+            foreach (var abstractCreature in room.abstractRoom.creatures)
             {
-                if (creature.realizedCreature != null && creature.realizedCreature.State.alive)
+                if (abstractCreature == null) continue;
+                if (abstractCreature.realizedCreature != null && abstractCreature.realizedCreature.State.alive)
                 {
-                    UpdateCreature(creature.realizedCreature);
-                }
-            }
-
-            // 绘制血条
-            foreach (var kvp in _healthBars)
-            {
-                if (kvp.Key.room == room)
-                {
-                    kvp.Value.Draw(camera, timeStacker);
+                    Creature creature = abstractCreature.realizedCreature;
+                    if (!healthBars.ContainsKey(creature))
+                    {
+                        healthBars[creature] = new HealthBarData(creature);
+                    }
+                    healthBars[creature].Update(camera, timeStacker);
                 }
             }
         }
 
         public static void ClearAll()
         {
-            _healthBars.Clear();
+            foreach (var kvp in healthBars)
+            {
+                if (kvp.Value != null)
+                {
+                    kvp.Value.RemoveSprites();
+                }
+            }
+            healthBars.Clear();
         }
     }
 
     public class HealthBarData
     {
-        private Creature _creature;
-        private float _currentHealth;
-        private float _maxHealth;
-        
-        // 血条显示参数
-        private const float BarWidth = 40f;
-        private const float BarHeight = 4f;
-        private const float OffsetY = 20f;
+        private Creature creature;
+        private float currentHealth;
+        private float maxHealth;
+
+        // Sprite 组件
+        private FSprite backgroundSprite;
+        private FSprite healthSprite;
+        private FContainer container;
+        private RoomCamera lastCamera;
+
+        // 血条显示参数 - 现在从配置读取
+        private const float OFFSET_Y = 20f;
+
+        private float BAR_WIDTH
+        {
+            get { return HealthBarConfig.BarWidth != null ? (float)HealthBarConfig.BarWidth.Value : 40f; }
+        }
+
+        private float BAR_HEIGHT
+        {
+            get { return HealthBarConfig.BarHeight != null ? (float)HealthBarConfig.BarHeight.Value : 4f; }
+        }
+
+        private float MAX_DISTANCE
+        {
+            get { return HealthBarConfig.MaxDistance != null ? (float)HealthBarConfig.MaxDistance.Value : 800f; }
+        }
 
         public HealthBarData(Creature creature)
         {
-            this._creature = creature;
-            
+            this.creature = creature;
+
             // 使用模板数据计算最大血量
-            this._maxHealth = 1f;
-            
+            this.maxHealth = 1f;
+
             // 根据生物类型设定不同的血量
             if (creature.Template.baseDamageResistance > 0f)
             {
-                _maxHealth = creature.Template.baseDamageResistance;
+                maxHealth = creature.Template.baseDamageResistance;
             }
-            
+
             if (creature.Template.baseStunResistance > 0f)
             {
-                _maxHealth *= creature.Template.baseStunResistance;
+                maxHealth *= creature.Template.baseStunResistance;
             }
-            
+
             // 使用 alive 状态作为当前血量指示器
-            this._currentHealth = _maxHealth;
+            this.currentHealth = maxHealth;
         }
 
-        public void Update()
+        public void Update(RoomCamera camera, float timeStacker)
         {
-            if (_creature != null && _creature.State != null)
+            if (creature == null || creature.State == null) return;
+
+            // 初始化 sprites
+            if (container == null && camera != null && camera.hud != null && camera.hud.fContainers != null && camera.hud.fContainers.Length > 0)
             {
-                // 根据生物状态更新血量
-                // 如果生物受伤，可以通过 stunned、dead 等属性判断
-                if (_creature.dead || !_creature.State.alive)
-                {
-                    _currentHealth = 0f;
-                }
-                else if (_creature.stun > 0)
-                {
-                    // 被眩晕时显示血量下降
-                    _currentHealth = _maxHealth * (1f - (_creature.stun / 100f));
-                }
-                else
-                {
-                    _currentHealth = _maxHealth;
-                }
+                InitSprites(camera);
+            }
+
+            // 根据生物状态更新血量
+            if (creature.dead || !creature.State.alive)
+            {
+                currentHealth = 0f;
+            }
+            else if (creature.stun > 0)
+            {
+                // 被眩晕时显示血量下降
+                currentHealth = maxHealth * Mathf.Clamp01(1f - (creature.stun / 100f));
+            }
+            else
+            {
+                currentHealth = maxHealth;
+            }
+
+            // 更新 sprite 位置和颜色
+            if (backgroundSprite != null && healthSprite != null && creature.bodyChunks != null && creature.bodyChunks.Length > 0)
+            {
+                DrawHealthBar(camera, timeStacker);
             }
         }
 
-        public void Draw(RoomCamera camera, float timeStacker)
+        private void InitSprites(RoomCamera camera)
         {
-            if (_creature == null || _creature.bodyChunks == null || _creature.bodyChunks.Length == 0)
+            try
+            {
+                if (camera == null || camera.hud == null || camera.hud.fContainers == null || camera.hud.fContainers.Length == 0) return;
+
+                lastCamera = camera;
+                container = new FContainer();
+
+                // 创建背景 sprite
+                backgroundSprite = new FSprite("pixel")
+                {
+                    scaleX = BAR_WIDTH,
+                    scaleY = BAR_HEIGHT,
+                    color = new Color(0f, 0f, 0f),
+                    alpha = 0.7f
+                };
+
+                // 创建血条 sprite
+                healthSprite = new FSprite("pixel")
+                {
+                    scaleX = BAR_WIDTH,
+                    scaleY = BAR_HEIGHT,
+                    color = Color.green,
+                    alpha = 0.9f
+                };
+
+                container.AddChild(backgroundSprite);
+                container.AddChild(healthSprite);
+
+                camera.hud.fContainers[1].AddChild(container);
+            }
+            catch (System.Exception e)
+            {
+                HealthBarMod.Logger.LogError($"Failed to initialize sprites: {e.Message}");
+            }
+        }
+
+        private void DrawHealthBar(RoomCamera camera, float timeStacker)
+        {
+            if (creature == null || creature.bodyChunks == null || creature.bodyChunks.Length == 0)
                 return;
+
+            if (backgroundSprite == null || healthSprite == null) return;
+            if (camera == null || camera.pos == null) return;
 
             // 获取生物头部位置
             Vector2 pos = Vector2.Lerp(
-                _creature.bodyChunks[0].lastPos,
-                _creature.bodyChunks[0].pos,
+                creature.bodyChunks[0].lastPos,
+                creature.bodyChunks[0].pos,
                 timeStacker
             );
 
             // 转换为屏幕坐标
-            Vector2 screenPos = pos - camera.pos + new Vector2(0f, OffsetY);
+            Vector2 screenPos = pos - camera.pos + new Vector2(0f, OFFSET_Y);
 
             // 计算血量百分比
-            float healthPercent = Mathf.Clamp01(_currentHealth / _maxHealth);
+            float healthPercent = Mathf.Clamp01(currentHealth / maxHealth);
 
-            // 绘制背景 (黑色)
-            DrawRect(screenPos, BarWidth, BarHeight, new Color(0f, 0f, 0f, 0.7f));
+            // 更新背景位置
+            backgroundSprite.SetPosition(screenPos);
 
-            // 绘制血条 (渐变颜色:绿->黄->红)
-            Color healthColor = GetHealthColor(healthPercent);
-            DrawRect(screenPos, BarWidth * healthPercent, BarHeight, healthColor);
+            // 更新血条位置和宽度
+            float healthWidth = BAR_WIDTH * healthPercent;
+            healthSprite.scaleX = healthWidth;
+            healthSprite.SetPosition(screenPos + new Vector2((healthWidth - BAR_WIDTH) / 2f, 0f));
+            healthSprite.color = GetHealthColor(healthPercent);
 
-            // 绘制边框 (白色)
-            DrawRectOutline(screenPos, BarWidth, BarHeight, Color.white);
+            // 根据距离调整透明度
+            float distanceToPlayer = 99999f;
+            if (camera.followAbstractCreature != null && camera.followAbstractCreature.realizedCreature != null)
+            {
+                distanceToPlayer = Vector2.Distance(pos, camera.followAbstractCreature.realizedCreature.mainBodyChunk.pos);
+            }
+
+            float alpha = Mathf.Clamp01(1f - (distanceToPlayer / MAX_DISTANCE));
+            backgroundSprite.alpha = alpha * 0.7f;
+            healthSprite.alpha = alpha * 0.9f;
         }
 
         private Color GetHealthColor(float percent)
@@ -159,34 +252,23 @@ namespace Monster_Health_Bars
                 return Color.red;
         }
 
-        // 简单的矩形绘制 (使用 GUI)
-        private void DrawRect(Vector2 center, float width, float height, Color color)
+        public void RemoveSprites()
         {
-            Rect rect = new Rect(center.x - width / 2f, Screen.height - center.y - height / 2f, width, height);
-            
-            // 保存之前的颜色
-            Color oldColor = GUI.color;
-            GUI.color = color;
-            
-            // 绘制纹理 (使用白色纹理)
-            GUI.DrawTexture(rect, Texture2D.whiteTexture);
-            
-            // 恢复颜色
-            GUI.color = oldColor;
-        }
-
-        private void DrawRectOutline(Vector2 center, float width, float height, Color color)
-        {
-            float thickness = 1f;
-            
-            // 上
-            DrawRect(new Vector2(center.x, center.y + height / 2f), width, thickness, color);
-            // 下
-            DrawRect(new Vector2(center.x, center.y - height / 2f), width, thickness, color);
-            // 左
-            DrawRect(new Vector2(center.x - width / 2f, center.y), thickness, height, color);
-            // 右
-            DrawRect(new Vector2(center.x + width / 2f, center.y), thickness, height, color);
+            try
+            {
+                if (container != null)
+                {
+                    container.RemoveFromContainer();
+                    container = null;
+                }
+                backgroundSprite = null;
+                healthSprite = null;
+                lastCamera = null;
+            }
+            catch (System.Exception e)
+            {
+                HealthBarMod.Logger.LogError($"Failed to remove sprites: {e.Message}");
+            }
         }
     }
 }
