@@ -1,7 +1,6 @@
 using BepInEx;
 using BepInEx.Logging;
 using UnityEngine;
-using System.Collections.Generic;
 using System.Security.Permissions;
 
 #pragma warning disable CS0618
@@ -10,24 +9,24 @@ using System.Security.Permissions;
 
 namespace Monster_Health_Bars
 {
-    [BepInPlugin(PLUGIN_GUID, PLUGIN_NAME, PLUGIN_VERSION)]
+    [BepInPlugin(PluginGuid, PluginName, PluginVersion)]
     public class HealthBarMod : BaseUnityPlugin
     {
-        public const string PLUGIN_GUID = "d5v.healthbar";
-        public const string PLUGIN_NAME = "Monster Health Bars";
-        public const string PLUGIN_VERSION = "1.0.0";
+        public const string PluginGuid = "d5v.healthbar";
+        public const string PluginName = "Monster Health Bars";
+        public const string PluginVersion = "1.0.0";
 
         public static new ManualLogSource Logger;
-        public static bool showHealthBars = true;
+        public static bool ShowHealthBars = true;
         
-        private bool isInit = false;
+        private bool _isInit;
 
         public void OnEnable()
         {
             Logger = base.Logger;
             
-            if (isInit) return;
-            isInit = true;
+            if (_isInit) return;
+            _isInit = true;
 
             Logger.LogInfo("Health Bar Mod loaded!");
 
@@ -47,8 +46,8 @@ namespace Monster_Health_Bars
 
         public void OnDisable()
         {
-            if (!isInit) return;
-            isInit = false;
+            if (!_isInit) return;
+            _isInit = false;
 
             // 取消订阅
             On.RainWorldGame.ShutDownProcess -= RainWorldGame_ShutDownProcess;
@@ -65,8 +64,8 @@ namespace Monster_Health_Bars
             // 检测 Tab 键切换显示
             if (Input.GetKeyDown(KeyCode.Tab))
             {
-                showHealthBars = !showHealthBars;
-                Logger.LogInfo($"Health bars: {(showHealthBars ? "Visible" : "Hidden")}");
+                ShowHealthBars = !ShowHealthBars;
+                Logger.LogInfo($"Health bars: {(ShowHealthBars ? "Visible" : "Hidden")}");
             }
         }
 
@@ -80,7 +79,7 @@ namespace Monster_Health_Bars
         {
             orig(self, timeStacker);
             
-            if (showHealthBars && self.owner is Player player && player.room != null)
+            if (ShowHealthBars && self.owner is Player player && player.room != null)
             {
                 HealthBarManager.DrawHealthBars(player.room, player.room.game.cameras[0], timeStacker);
             }
