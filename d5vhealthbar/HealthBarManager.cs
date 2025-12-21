@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Monster_Health_Bars
+namespace d5vhealthbar
 {
     public static class HealthBarManager
     {
@@ -85,9 +85,7 @@ namespace Monster_Health_Bars
                         return true; // 正在进入管道，隐藏血条
                     }
                 }
-                catch
-                {
-                    // 忽略反射错误
+                catch {
                 }
             }
 

@@ -1,6 +1,0 @@
-// Monster Health Bars - Spanish Translation
-// Traducción al español
-
-// Mod name and description
-d5v.healthbar_modname : Barras de Vida de Monstruos
-d5v.healthbar_moddesc : Muestra barras de vida sobre todas las criaturas con animaciones suaves y opciones configurables.

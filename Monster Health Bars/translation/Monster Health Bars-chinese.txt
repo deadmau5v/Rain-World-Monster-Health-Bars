@@ -1,6 +1,0 @@
-// Monster Health Bars - 中文翻译
-// Chinese Translation
-
-// Mod 名称和描述
-d5v.healthbar_modname : 怪物血条
-d5v.healthbar_moddesc : 在所有生物上方显示平滑动画血条，支持多种可配置选项。

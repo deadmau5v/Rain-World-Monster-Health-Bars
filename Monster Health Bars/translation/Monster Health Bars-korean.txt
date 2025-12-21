@@ -1,6 +1,0 @@
-// Monster Health Bars - Korean Translation
-// 한국어 번역
-
-// Mod name and description
-d5v.healthbar_modname : 몬스터 체력 바
-d5v.healthbar_moddesc : 모든 생명체 위에 부드러운 애니메이션과 함께 체력 바를 표시합니다. 다양한 옵션 설정 가능.

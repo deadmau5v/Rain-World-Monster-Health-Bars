@@ -1,6 +1,0 @@
-// Monster Health Bars - Russian Translation
-// Русский перевод
-
-// Mod name and description
-d5v.healthbar_modname : Полоски Здоровья Монстров
-d5v.healthbar_moddesc : Отображает полоски здоровья над всеми существами с плавными анимациями и настраиваемыми параметрами.

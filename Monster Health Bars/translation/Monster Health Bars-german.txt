@@ -1,6 +1,0 @@
-// Monster Health Bars - German Translation
-// Deutsche Übersetzung
-
-// Mod name and description
-d5v.healthbar_modname : Monster-Lebensbalken
-d5v.healthbar_moddesc : Zeigt Lebensbalken über allen Kreaturen mit sanften Animationen und konfigurierbaren Optionen an.

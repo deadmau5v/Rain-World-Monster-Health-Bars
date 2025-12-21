@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Monster Health Bars", "Monster Health Bars\Monster Health Bars.csproj", "{1CFA939F-3735-4178-BE92-E3E50C40DB5A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "d5vhealthbar", "d5vhealthbar\d5vhealthbar.csproj", "{1CFA939F-3735-4178-BE92-E3E50C40DB5A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

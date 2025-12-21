@@ -1,6 +1,0 @@
-// Monster Health Bars - English Translation
-// 英文翻译
-
-// Mod name and description
-d5v.healthbar_modname : Monster Health Bars
-d5v.healthbar_moddesc : Displays health bars above all creatures with smooth animations and configurable options.

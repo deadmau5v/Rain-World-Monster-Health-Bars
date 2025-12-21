@@ -3,8 +3,7 @@
         <TargetFramework>net48</TargetFramework>
         <LangVersion>latest</LangVersion>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-        <AssemblyName>Monster_Health_Bars</AssemblyName>
-        <RootNamespace>Monster_Health_Bars</RootNamespace>
+        <AssemblyName>d5vhealthbar</AssemblyName>
         <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     </PropertyGroup>
 

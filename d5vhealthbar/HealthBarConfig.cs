@@ -3,7 +3,7 @@ using RWCustom;
 using UnityEngine;
 using System.Collections.Generic;
 
-namespace Monster_Health_Bars
+namespace d5vhealthbar
 {
     public class HealthBarConfig : OptionInterface
     {
@@ -24,7 +24,7 @@ namespace Monster_Health_Bars
                 {
                     InGameTranslator.LanguageID.English, new Dictionary<string, string>
                     {
-                        {"mod_name", "Monster Health Bars Settings"},
+                        {"mod_name", "d5vhealthbar Settings"},
                         {"enable_bars", "Enable Health Bars:"},
                         {"show_player", "Show Player Health Bar:"},
                         {"hide_full", "Hide When Full Health:"},
