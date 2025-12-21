@@ -1,7 +1,5 @@
 using BepInEx;
 using BepInEx.Logging;
-using UnityEngine;
-using System.Collections.Generic;
 using System.Security.Permissions;
 
 #pragma warning disable CS0618
@@ -10,24 +8,24 @@ using System.Security.Permissions;
 
 namespace Monster_Health_Bars
 {
-    [BepInPlugin(PLUGIN_GUID, PLUGIN_NAME, PLUGIN_VERSION)]
+    [BepInPlugin(PluginGuid, PluginName, PluginVersion)]
     public class HealthBarMod : BaseUnityPlugin
     {
-        public const string PLUGIN_GUID = "d5v.healthbar";
-        public const string PLUGIN_NAME = "Monster Health Bars";
-        public const string PLUGIN_VERSION = "1.3.0";
+        public const string PluginGuid = "d5v.healthbar";
+        public const string PluginName = "Monster Health Bars";
+        public const string PluginVersion = "1.4.0";
 
         public static new ManualLogSource Logger;
 
-        private bool isInit = false;
-        private bool hooksRegistered = false;
+        private bool _isInit;
+        private bool _hooksRegistered;
 
         public void OnEnable()
         {
             Logger = base.Logger;
 
-            if (isInit) return;
-            isInit = true;
+            if (_isInit) return;
+            _isInit = true;
 
             Logger.LogInfo("Health Bar Mod loaded!");
 
@@ -40,13 +38,13 @@ namespace Monster_Health_Bars
             orig(self);
 
             // 避免重复注册钩子
-            if (hooksRegistered) return;
-            hooksRegistered = true;
+            if (_hooksRegistered) return;
+            _hooksRegistered = true;
 
             try
             {
                 // 注册配置界面
-                MachineConnector.SetRegisteredOI(PLUGIN_GUID, new HealthBarConfig());
+                MachineConnector.SetRegisteredOI(PluginGuid, new HealthBarConfig());
 
                 // 注册绘制和清理钩子
                 On.HUD.HUD.Draw += HUD_Draw;
@@ -62,19 +60,19 @@ namespace Monster_Health_Bars
 
         public void OnDisable()
         {
-            if (!isInit) return;
-            isInit = false;
+            if (!_isInit) return;
+            _isInit = false;
 
             // 取消订阅所有钩子
             try
             {
                 On.RainWorld.OnModsInit -= RainWorld_OnModsInit;
 
-                if (hooksRegistered)
+                if (_hooksRegistered)
                 {
                     On.HUD.HUD.Draw -= HUD_Draw;
                     On.RainWorldGame.ShutDownProcess -= RainWorldGame_ShutDownProcess;
-                    hooksRegistered = false;
+                    _hooksRegistered = false;
                 }
 
                 HealthBarManager.ClearAll();
