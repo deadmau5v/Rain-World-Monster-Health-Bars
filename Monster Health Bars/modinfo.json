@@ -1,0 +1,11 @@
+{
+  "id": "d5v.healthbar",
+  "name": "Creature Health Bars",
+  "version": "1.0.0",
+  "target_game_version": "1.9.15",
+  "authors": "deadmau5v",
+  "description": "Displays health bars above all creatures. Press Tab to toggle visibility.",
+  "requirements": [],
+  "requirements_names": [],
+  "checksum_override_version": false
+}

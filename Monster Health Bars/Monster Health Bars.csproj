@@ -1,0 +1,47 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <TargetFramework>net48</TargetFramework>
+        <LangVersion>latest</LangVersion>
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+        <AssemblyName>Monster_Health_Bars</AssemblyName>
+        <RootNamespace>Monster_Health_Bars</RootNamespace>
+        <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <Reference Include="UnityEngine.InputLegacyModule">
+            <HintPath>..\lib\UnityEngine.InputLegacyModule.dll</HintPath>
+            <Private>False</Private>
+        </Reference>
+
+        <Reference Include="UnityEngine.IMGUIModule">
+            <HintPath>..\lib\UnityEngine.IMGUIModule.dll</HintPath>
+            <Private>False</Private>
+        </Reference>
+
+        <Reference Include="BepInEx">
+            <HintPath>..\lib\BepInEx.dll</HintPath>
+            <Private>False</Private>
+        </Reference>
+
+        <Reference Include="HOOKS-Assembly-CSharp">
+            <HintPath>..\lib\HOOKS-Assembly-CSharp.dll</HintPath>
+            <Private>False</Private>
+        </Reference>
+
+        <Reference Include="PUBLIC-Assembly-CSharp">
+            <HintPath>..\lib\PUBLIC-Assembly-CSharp.dll</HintPath>
+            <Private>False</Private>
+        </Reference>
+
+        <Reference Include="UnityEngine">
+            <HintPath>..\lib\UnityEngine.dll</HintPath>
+            <Private>False</Private>
+        </Reference>
+
+        <Reference Include="UnityEngine.CoreModule">
+            <HintPath>..\lib\UnityEngine.CoreModule.dll</HintPath>
+            <Private>False</Private>
+        </Reference>
+    </ItemGroup>
+</Project>
