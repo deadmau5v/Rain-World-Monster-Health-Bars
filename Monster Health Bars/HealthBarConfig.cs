@@ -1,4 +1,5 @@
 using Menu.Remix.MixedUI;
+using RWCustom;
 using UnityEngine;
 
 namespace Monster_Health_Bars
@@ -7,6 +8,7 @@ namespace Monster_Health_Bars
     {
         public static Configurable<bool> EnableHealthBars;
         public static Configurable<bool> ShowPlayerHealthBar;
+        public static Configurable<bool> HideWhenFullHealth;
         public static Configurable<int> BarWidth;
         public static Configurable<int> BarHeight;
         public static Configurable<int> MaxDistance;
@@ -29,6 +31,10 @@ namespace Monster_Health_Bars
             ShowPlayerHealthBar = config.Bind("ShowPlayerHealthBar", false, new ConfigurableInfo(
                 Translate("Show health bar above the player", "在玩家上方显示血条"),
                 null, "", Translate("Show Player Health Bar", "显示玩家血条")));
+
+            HideWhenFullHealth = config.Bind("HideWhenFullHealth", true, new ConfigurableInfo(
+                Translate("Hide health bars when creature is at full health", "生物满血时隐藏血条"),
+                null, "", Translate("Hide When Full Health", "满血时隐藏")));
 
             BarWidth = config.Bind("BarWidth", 40, new ConfigurableInfo(
                 Translate("Width of the health bar in pixels", "血条宽度(像素)"),
@@ -69,6 +75,13 @@ namespace Monster_Health_Bars
             opTab.AddItems(
                 new OpLabel(10f, yPos, Translate("Show Player Health Bar:", "显示玩家血条:")),
                 new OpCheckBox(ShowPlayerHealthBar, new Vector2(250f, yPos))
+            );
+            yPos -= 40f;
+
+            // 满血时隐藏复选框
+            opTab.AddItems(
+                new OpLabel(10f, yPos, Translate("Hide When Full Health:", "满血时隐藏:")),
+                new OpCheckBox(HideWhenFullHealth, new Vector2(250f, yPos))
             );
             yPos -= 60f;
 

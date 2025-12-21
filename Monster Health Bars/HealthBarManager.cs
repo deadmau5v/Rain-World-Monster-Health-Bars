@@ -56,6 +56,17 @@ namespace Monster_Health_Bars
                 if (abstractCreature.realizedCreature != null && abstractCreature.realizedCreature.State.alive)
                 {
                     Creature creature = abstractCreature.realizedCreature;
+
+                    // 如果是玩家,检查配置是否允许显示玩家血条
+                    if (creature is Player)
+                    {
+                        if (HealthBarConfig.ShowPlayerHealthBar == null || !HealthBarConfig.ShowPlayerHealthBar.Value)
+                        {
+                            // 不显示玩家血条,跳过
+                            continue;
+                        }
+                    }
+
                     if (!healthBars.ContainsKey(creature))
                     {
                         healthBars[creature] = new HealthBarData(creature);
@@ -155,10 +166,33 @@ namespace Monster_Health_Bars
                 currentHealth = maxHealth;
             }
 
+            // 检查是否满血且配置为满血时隐藏
+            bool shouldHide = false;
+            if (HealthBarConfig.HideWhenFullHealth != null && HealthBarConfig.HideWhenFullHealth.Value)
+            {
+                float healthPercent = Mathf.Clamp01(currentHealth / maxHealth);
+                if (healthPercent >= 0.99f) // 99% 以上视为满血
+                {
+                    shouldHide = true;
+                }
+            }
+
             // 更新 sprite 位置和颜色
             if (backgroundSprite != null && healthSprite != null && creature.bodyChunks != null && creature.bodyChunks.Length > 0)
             {
-                DrawHealthBar(camera, timeStacker);
+                if (shouldHide)
+                {
+                    // 隐藏血条
+                    backgroundSprite.isVisible = false;
+                    healthSprite.isVisible = false;
+                }
+                else
+                {
+                    // 显示血条
+                    backgroundSprite.isVisible = true;
+                    healthSprite.isVisible = true;
+                    DrawHealthBar(camera, timeStacker);
+                }
             }
         }
 

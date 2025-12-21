@@ -15,7 +15,7 @@ namespace Monster_Health_Bars
     {
         public const string PLUGIN_GUID = "d5v.healthbar";
         public const string PLUGIN_NAME = "Monster Health Bars";
-        public const string PLUGIN_VERSION = "1.0.2";
+        public const string PLUGIN_VERSION = "1.2.0";
 
         public static new ManualLogSource Logger;
 
