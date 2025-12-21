@@ -8,22 +8,6 @@ namespace Monster_Health_Bars
     {
         private static Dictionary<Creature, HealthBarData> healthBars = new Dictionary<Creature, HealthBarData>();
 
-        // 已弃用 - 使用 DrawHealthBars 代替
-        // public static void UpdateCreature(Creature creature)
-        // {
-        //     if (creature == null || creature.room == null) return;
-        //
-        //     // 检查生物是否存活
-        //     if (!creature.State.alive) return;
-        //
-        //     if (!healthBars.ContainsKey(creature))
-        //     {
-        //         healthBars[creature] = new HealthBarData(creature);
-        //     }
-        //
-        //     healthBars[creature].Update();
-        // }
-
         public static void DrawHealthBars(Room room, RoomCamera camera, float timeStacker)
         {
             // 添加更严格的空值检查
@@ -98,11 +82,18 @@ namespace Monster_Health_Bars
         // Sprite 组件
         private FSprite backgroundSprite;
         private FSprite healthSprite;
+        private FSprite[] cornerSprites; // 四个圆角
         private FContainer container;
         private RoomCamera lastCamera;
 
+        // 位置缓动
+        private Vector2 smoothedPosition;
+        private bool positionInitialized = false;
+        private const float SMOOTH_FACTOR = 0.3f; // 缓动系数,越小越平滑
+
         // 血条显示参数 - 现在从配置读取
         private const float OFFSET_Y = 20f;
+        private const float CORNER_RADIUS = 2f; // 圆角半径
 
         private float BAR_WIDTH
         {
@@ -185,12 +176,26 @@ namespace Monster_Health_Bars
                     // 隐藏血条
                     backgroundSprite.isVisible = false;
                     healthSprite.isVisible = false;
+                    if (cornerSprites != null)
+                    {
+                        foreach (var corner in cornerSprites)
+                        {
+                            if (corner != null) corner.isVisible = false;
+                        }
+                    }
                 }
                 else
                 {
                     // 显示血条
                     backgroundSprite.isVisible = true;
                     healthSprite.isVisible = true;
+                    if (cornerSprites != null)
+                    {
+                        foreach (var corner in cornerSprites)
+                        {
+                            if (corner != null) corner.isVisible = true;
+                        }
+                    }
                     DrawHealthBar(camera, timeStacker);
                 }
             }
@@ -205,11 +210,11 @@ namespace Monster_Health_Bars
                 lastCamera = camera;
                 container = new FContainer();
 
-                // 创建背景 sprite
+                // 创建背景 sprite (稍微缩小以便显示圆角)
                 backgroundSprite = new FSprite("pixel")
                 {
-                    scaleX = BAR_WIDTH,
-                    scaleY = BAR_HEIGHT,
+                    scaleX = BAR_WIDTH - CORNER_RADIUS,
+                    scaleY = BAR_HEIGHT - CORNER_RADIUS,
                     color = new Color(0f, 0f, 0f),
                     alpha = 0.7f
                 };
@@ -217,11 +222,25 @@ namespace Monster_Health_Bars
                 // 创建血条 sprite
                 healthSprite = new FSprite("pixel")
                 {
-                    scaleX = BAR_WIDTH,
-                    scaleY = BAR_HEIGHT,
+                    scaleX = BAR_WIDTH - CORNER_RADIUS,
+                    scaleY = BAR_HEIGHT - CORNER_RADIUS,
                     color = Color.green,
                     alpha = 0.9f
                 };
+
+                // 创建四个圆角
+                cornerSprites = new FSprite[4];
+                for (int i = 0; i < 4; i++)
+                {
+                    cornerSprites[i] = new FSprite("pixel")
+                    {
+                        scaleX = CORNER_RADIUS,
+                        scaleY = CORNER_RADIUS,
+                        color = new Color(0f, 0f, 0f),
+                        alpha = 0.7f
+                    };
+                    container.AddChild(cornerSprites[i]);
+                }
 
                 container.AddChild(backgroundSprite);
                 container.AddChild(healthSprite);
@@ -243,14 +262,28 @@ namespace Monster_Health_Bars
             if (camera == null || camera.pos == null) return;
 
             // 获取生物头部位置
-            Vector2 pos = Vector2.Lerp(
+            Vector2 targetPos = Vector2.Lerp(
                 creature.bodyChunks[0].lastPos,
                 creature.bodyChunks[0].pos,
                 timeStacker
             );
 
             // 转换为屏幕坐标
-            Vector2 screenPos = pos - camera.pos + new Vector2(0f, OFFSET_Y);
+            Vector2 targetScreenPos = targetPos - camera.pos + new Vector2(0f, OFFSET_Y);
+
+            // 应用位置缓动以减少抖动
+            if (!positionInitialized)
+            {
+                smoothedPosition = targetScreenPos;
+                positionInitialized = true;
+            }
+            else
+            {
+                // 平滑插值
+                smoothedPosition = Vector2.Lerp(smoothedPosition, targetScreenPos, SMOOTH_FACTOR);
+            }
+
+            Vector2 screenPos = smoothedPosition;
 
             // 计算血量百分比
             float healthPercent = Mathf.Clamp01(currentHealth / maxHealth);
@@ -259,21 +292,49 @@ namespace Monster_Health_Bars
             backgroundSprite.SetPosition(screenPos);
 
             // 更新血条位置和宽度
-            float healthWidth = BAR_WIDTH * healthPercent;
+            float healthWidth = (BAR_WIDTH - CORNER_RADIUS) * healthPercent;
             healthSprite.scaleX = healthWidth;
-            healthSprite.SetPosition(screenPos + new Vector2((healthWidth - BAR_WIDTH) / 2f, 0f));
+            healthSprite.SetPosition(screenPos + new Vector2((healthWidth - (BAR_WIDTH - CORNER_RADIUS)) / 2f, 0f));
             healthSprite.color = GetHealthColor(healthPercent);
+
+            // 更新圆角位置
+            if (cornerSprites != null && cornerSprites.Length == 4)
+            {
+                float halfWidth = (BAR_WIDTH - CORNER_RADIUS) / 2f;
+                float halfHeight = (BAR_HEIGHT - CORNER_RADIUS) / 2f;
+
+                // 左上角
+                cornerSprites[0].SetPosition(screenPos + new Vector2(-halfWidth, halfHeight));
+                // 右上角
+                cornerSprites[1].SetPosition(screenPos + new Vector2(halfWidth, halfHeight));
+                // 左下角
+                cornerSprites[2].SetPosition(screenPos + new Vector2(-halfWidth, -halfHeight));
+                // 右下角
+                cornerSprites[3].SetPosition(screenPos + new Vector2(halfWidth, -halfHeight));
+            }
 
             // 根据距离调整透明度
             float distanceToPlayer = 99999f;
             if (camera.followAbstractCreature != null && camera.followAbstractCreature.realizedCreature != null)
             {
-                distanceToPlayer = Vector2.Distance(pos, camera.followAbstractCreature.realizedCreature.mainBodyChunk.pos);
+                distanceToPlayer = Vector2.Distance(targetPos, camera.followAbstractCreature.realizedCreature.mainBodyChunk.pos);
             }
 
             float alpha = Mathf.Clamp01(1f - (distanceToPlayer / MAX_DISTANCE));
             backgroundSprite.alpha = alpha * 0.7f;
             healthSprite.alpha = alpha * 0.9f;
+
+            // 更新圆角透明度
+            if (cornerSprites != null)
+            {
+                foreach (var corner in cornerSprites)
+                {
+                    if (corner != null)
+                    {
+                        corner.alpha = alpha * 0.7f;
+                    }
+                }
+            }
         }
 
         private Color GetHealthColor(float percent)
@@ -297,6 +358,7 @@ namespace Monster_Health_Bars
                 }
                 backgroundSprite = null;
                 healthSprite = null;
+                cornerSprites = null;
                 lastCamera = null;
             }
             catch (System.Exception e)
