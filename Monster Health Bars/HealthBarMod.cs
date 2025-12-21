@@ -43,6 +43,9 @@ namespace Monster_Health_Bars
 
             try
             {
+                // 加载多语言翻译
+                LoadTranslations();
+
                 // 注册配置界面
                 MachineConnector.SetRegisteredOI(PluginGuid, new HealthBarConfig());
 
@@ -55,6 +58,21 @@ namespace Monster_Health_Bars
             catch (System.Exception e)
             {
                 Logger.LogError($"Failed to register hooks: {e.Message}");
+            }
+        }
+
+        private void LoadTranslations()
+        {
+            try
+            {
+                // Rain World 会自动从 translation 文件夹加载翻译文件
+                // 文件名格式：ModName-language.txt
+                // 我们只需要确保翻译键在 modinfo.json 中被引用
+                Logger.LogInfo("Translation files loaded from translation folder");
+            }
+            catch (System.Exception e)
+            {
+                Logger.LogError($"Failed to load translations: {e.Message}");
             }
         }
 

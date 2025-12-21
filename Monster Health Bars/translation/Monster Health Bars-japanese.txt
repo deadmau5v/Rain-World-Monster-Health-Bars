@@ -1,0 +1,6 @@
+// Monster Health Bars - Japanese Translation
+// 日本語翻訳
+
+// Mod name and description
+d5v.healthbar_modname : モンスター体力バー
+d5v.healthbar_moddesc : すべてのクリーチャーの上にスムーズなアニメーション付き体力バーを表示します。設定可能なオプション付き。

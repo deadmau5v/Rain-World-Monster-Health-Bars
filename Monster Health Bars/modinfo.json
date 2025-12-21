@@ -1,10 +1,10 @@
 {
   "id": "d5v.healthbar",
-  "name": "Monster Health Bars",
+  "name": "d5v.healthbar_modname",
   "version": "1.4.0",
   "target_game_version": "v1.11.5",
   "authors": "d5v",
-  "description": "Displays health bars above all creatures with smooth animations and configurable options.",
+  "description": "d5v.healthbar_moddesc",
   "requirements": [],
   "requirements_names": [],
   "checksum_override_version": false

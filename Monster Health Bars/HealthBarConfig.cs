@@ -52,6 +52,134 @@ namespace Monster_Health_Bars
                         {"desc3", "当生物远离玩家时,血条会逐渐淡出。"},
                         {"settings", "设置"}
                     }
+                },
+                {
+                    InGameTranslator.LanguageID.Japanese, new Dictionary<string, string>
+                    {
+                        {"mod_name", "モンスター体力バー設定"},
+                        {"enable_bars", "体力バーを有効化:"},
+                        {"show_player", "プレイヤーの体力バーを表示:"},
+                        {"hide_full", "満タン時に非表示:"},
+                        {"bar_width", "バー幅 (20-100):"},
+                        {"bar_height", "バー高さ (2-10):"},
+                        {"max_distance", "最大距離 (400-1600):"},
+                        {"desc1", "ゲーム内のすべてのクリーチャーの上に体力バーが表示されます。"},
+                        {"desc2", "体力に応じて緑から黄色、赤へと色が変わります。"},
+                        {"desc3", "クリーチャーがプレイヤーから離れるにつれてバーがフェードアウトします。"},
+                        {"settings", "設定"}
+                    }
+                },
+                {
+                    InGameTranslator.LanguageID.Korean, new Dictionary<string, string>
+                    {
+                        {"mod_name", "몬스터 체력 바 설정"},
+                        {"enable_bars", "체력 바 활성화:"},
+                        {"show_player", "플레이어 체력 바 표시:"},
+                        {"hide_full", "체력 만땅일 때 숨기기:"},
+                        {"bar_width", "바 너비 (20-100):"},
+                        {"bar_height", "바 높이 (2-10):"},
+                        {"max_distance", "최대 거리 (400-1600):"},
+                        {"desc1", "모든 생명체 위에 체력 바가 표시됩니다."},
+                        {"desc2", "체력에 따라 녹색에서 노란색, 빨간색으로 색이 변합니다."},
+                        {"desc3", "생명체가 플레이어로부터 멀어질수록 바가 점점 사라집니다."},
+                        {"settings", "설정"}
+                    }
+                },
+                {
+                    InGameTranslator.LanguageID.French, new Dictionary<string, string>
+                    {
+                        {"mod_name", "Paramètres des Barres de Vie"},
+                        {"enable_bars", "Activer les barres de vie:"},
+                        {"show_player", "Afficher la barre du joueur:"},
+                        {"hide_full", "Masquer à pleine vie:"},
+                        {"bar_width", "Largeur de barre (20-100):"},
+                        {"bar_height", "Hauteur de barre (2-10):"},
+                        {"max_distance", "Distance maximale (400-1600):"},
+                        {"desc1", "Les barres de vie apparaissent au-dessus de toutes les créatures."},
+                        {"desc2", "La couleur change du vert au jaune puis au rouge selon la vie."},
+                        {"desc3", "Les barres s'estompent lorsque les créatures s'éloignent du joueur."},
+                        {"settings", "Paramètres"}
+                    }
+                },
+                {
+                    InGameTranslator.LanguageID.German, new Dictionary<string, string>
+                    {
+                        {"mod_name", "Monster-Lebensbalken Einstellungen"},
+                        {"enable_bars", "Lebensbalken aktivieren:"},
+                        {"show_player", "Spieler-Lebensbalken anzeigen:"},
+                        {"hide_full", "Bei voller Gesundheit ausblenden:"},
+                        {"bar_width", "Balkenbreite (20-100):"},
+                        {"bar_height", "Balkenhöhe (2-10):"},
+                        {"max_distance", "Maximale Entfernung (400-1600):"},
+                        {"desc1", "Lebensbalken erscheinen über allen Kreaturen im Spiel."},
+                        {"desc2", "Die Farbe wechselt von Grün über Gelb zu Rot je nach Gesundheit."},
+                        {"desc3", "Balken verblassen, wenn sich Kreaturen vom Spieler entfernen."},
+                        {"settings", "Einstellungen"}
+                    }
+                },
+                {
+                    InGameTranslator.LanguageID.Spanish, new Dictionary<string, string>
+                    {
+                        {"mod_name", "Configuración de Barras de Vida"},
+                        {"enable_bars", "Activar barras de vida:"},
+                        {"show_player", "Mostrar barra del jugador:"},
+                        {"hide_full", "Ocultar con vida completa:"},
+                        {"bar_width", "Ancho de barra (20-100):"},
+                        {"bar_height", "Alto de barra (2-10):"},
+                        {"max_distance", "Distancia máxima (400-1600):"},
+                        {"desc1", "Las barras de vida aparecen sobre todas las criaturas del juego."},
+                        {"desc2", "El color cambia de verde a amarillo y luego a rojo según la vida."},
+                        {"desc3", "Las barras se desvanecen cuando las criaturas se alejan del jugador."},
+                        {"settings", "Configuración"}
+                    }
+                },
+                {
+                    InGameTranslator.LanguageID.Italian, new Dictionary<string, string>
+                    {
+                        {"mod_name", "Impostazioni Barre Vita"},
+                        {"enable_bars", "Attiva barre vita:"},
+                        {"show_player", "Mostra barra del giocatore:"},
+                        {"hide_full", "Nascondi a vita piena:"},
+                        {"bar_width", "Larghezza barra (20-100):"},
+                        {"bar_height", "Altezza barra (2-10):"},
+                        {"max_distance", "Distanza massima (400-1600):"},
+                        {"desc1", "Le barre vita appaiono sopra tutte le creature nel gioco."},
+                        {"desc2", "Il colore cambia da verde a giallo a rosso in base alla vita."},
+                        {"desc3", "Le barre svaniscono quando le creature si allontanano dal giocatore."},
+                        {"settings", "Impostazioni"}
+                    }
+                },
+                {
+                    InGameTranslator.LanguageID.Portuguese, new Dictionary<string, string>
+                    {
+                        {"mod_name", "Configurações de Barras de Vida"},
+                        {"enable_bars", "Ativar barras de vida:"},
+                        {"show_player", "Mostrar barra do jogador:"},
+                        {"hide_full", "Ocultar com vida cheia:"},
+                        {"bar_width", "Largura da barra (20-100):"},
+                        {"bar_height", "Altura da barra (2-10):"},
+                        {"max_distance", "Distância máxima (400-1600):"},
+                        {"desc1", "Barras de vida aparecem acima de todas as criaturas no jogo."},
+                        {"desc2", "A cor muda de verde para amarelo e depois vermelho conforme a vida."},
+                        {"desc3", "As barras desaparecem quando as criaturas se afastam do jogador."},
+                        {"settings", "Configurações"}
+                    }
+                },
+                {
+                    InGameTranslator.LanguageID.Russian, new Dictionary<string, string>
+                    {
+                        {"mod_name", "Настройки Полосок Здоровья"},
+                        {"enable_bars", "Включить полоски здоровья:"},
+                        {"show_player", "Показать полоску игрока:"},
+                        {"hide_full", "Скрывать при полном здоровье:"},
+                        {"bar_width", "Ширина полоски (20-100):"},
+                        {"bar_height", "Высота полоски (2-10):"},
+                        {"max_distance", "Максимальное расстояние (400-1600):"},
+                        {"desc1", "Полоски здоровья появляются над всеми существами в игре."},
+                        {"desc2", "Цвет меняется с зелёного на жёлтый и красный в зависимости от здоровья."},
+                        {"desc3", "Полоски исчезают, когда существа удаляются от игрока."},
+                        {"settings", "Настройки"}
+                    }
                 }
             };
 
