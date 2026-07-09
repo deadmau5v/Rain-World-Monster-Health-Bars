@@ -10,12 +10,11 @@ namespace d5vhealthbar
         public static Configurable<bool> EnableHealthBars;
         public static Configurable<bool> ShowPlayerHealthBar;
         public static Configurable<bool> HideWhenFullHealth;
-        public static Configurable<bool> OnlyShowHostile;  // 只显示有敌意的生物
+        public static Configurable<bool> OnlyShowHostile;
         public static Configurable<int> MaxDistance;
-        public static Configurable<int> HealthBarScale;    // 血条缩放 (50-150%)
-        public static Configurable<int> HealthBarOpacity;  // 血条透明度 (10-100%)
+        public static Configurable<int> HealthBarScale;
+        public static Configurable<int> HealthBarOpacity;
 
-        // 多语言文本
         private static new string Translate(string key)
         {
             var lang = Custom.rainWorld.inGameTranslator.currentLanguage;
@@ -205,7 +204,6 @@ namespace d5vhealthbar
 
         public HealthBarConfig()
         {
-            // 初始化配置项
             EnableHealthBars = config.Bind("EnableHealthBars", true, new ConfigurableInfo(
                 "Enable health bars display for all creatures",
                 null, "", "Enable Health Bars"));
@@ -244,62 +242,53 @@ namespace d5vhealthbar
 
             float yPos = 550f;
 
-            // 标题
             opTab.AddItems(
                 new OpLabel(10f, yPos, Translate("mod_name"), true)
             );
             yPos -= 40f;
 
-            // 启用/禁用复选框
             opTab.AddItems(
                 new OpLabel(10f, yPos, Translate("enable_bars")),
                 new OpCheckBox(EnableHealthBars, new Vector2(250f, yPos))
             );
             yPos -= 40f;
 
-            // 显示玩家血条复选框
             opTab.AddItems(
                 new OpLabel(10f, yPos, Translate("show_player")),
                 new OpCheckBox(ShowPlayerHealthBar, new Vector2(250f, yPos))
             );
             yPos -= 40f;
 
-            // 满血时隐藏复选框
             opTab.AddItems(
                 new OpLabel(10f, yPos, Translate("hide_full")),
                 new OpCheckBox(HideWhenFullHealth, new Vector2(250f, yPos))
             );
             yPos -= 40f;
 
-            // 只显示敌对生物复选框
             opTab.AddItems(
                 new OpLabel(10f, yPos, Translate("only_hostile")),
                 new OpCheckBox(OnlyShowHostile, new Vector2(250f, yPos))
             );
             yPos -= 60f;
 
-            // 血条缩放滑块
             opTab.AddItems(
                 new OpLabel(10f, yPos, Translate("bar_scale")),
                 new OpSlider(HealthBarScale, new Vector2(250f, yPos), 200)
             );
             yPos -= 40f;
 
-            // 血条透明度滑块
             opTab.AddItems(
                 new OpLabel(10f, yPos, Translate("bar_opacity")),
                 new OpSlider(HealthBarOpacity, new Vector2(250f, yPos), 200)
             );
             yPos -= 40f;
 
-            // 最大距离滑块
             opTab.AddItems(
                 new OpLabel(10f, yPos, Translate("max_distance")),
                 new OpSlider(MaxDistance, new Vector2(250f, yPos), 200)
             );
             yPos -= 60f;
 
-            // 使用说明
             opTab.AddItems(
                 new OpLabel(10f, yPos, Translate("desc1"))
             );

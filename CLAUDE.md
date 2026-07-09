@@ -6,8 +6,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 This is a **Rain World mod** that displays health bars above creatures using BepInEx and MonoMod IL hooks. The mod uses Rain World's FSprite rendering system and the Remix configuration interface for user settings.
 
-**Version:** 1.4.0
-**Target Game:** Rain World v1.11.5
+**Version:** 1.5.0
+**Target Game:** Rain World v1.11.8
 **Framework:** BepInEx plugin system with .NET Framework 4.8
 
 ## Build System

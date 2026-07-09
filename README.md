@@ -1,6 +1,6 @@
 # Monster Health Bars
 
-[![Version](https://img.shields.io/badge/version-1.4.0-green.svg)](https://github.com/deadmau5v/Rain-World-Monster-Health-Bars)
+[![Version](https://img.shields.io/badge/version-1.5.0-green.svg)](https://github.com/deadmau5v/Rain-World-Monster-Health-Bars)
 
 A Rain World mod that displays smooth, configurable health bars above creatures with rounded corners, distance fading, and death animations.
 
@@ -18,7 +18,7 @@ A Rain World mod that displays smooth, configurable health bars above creatures 
 
 ## Installation
 
-1. Install [BepInEx 5.x](https://bepinex.github.io/) for Rain World v1.11.5
+1. Install [BepInEx 5.x](https://bepinex.github.io/) for Rain World v1.11.8
 2. Drop `Monster Health Bars.dll` into `BepInEx/plugins/`
 3. Launch game → Config appears in Remix Mod Manager
 

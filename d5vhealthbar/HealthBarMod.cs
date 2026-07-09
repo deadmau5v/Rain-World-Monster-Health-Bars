@@ -13,7 +13,7 @@ namespace d5vhealthbar
     {
         public const string PluginGuid = "d5vhealthbar";
         public const string PluginName = "d5vhealthbar";
-        public const string PluginVersion = "1.4.0";
+        public const string PluginVersion = "1.5.0";
 
         public static new ManualLogSource Logger;
 
@@ -29,7 +29,6 @@ namespace d5vhealthbar
 
             Logger.LogInfo("Health Bar Mod loaded!");
 
-            // 只订阅初始化钩子
             On.RainWorld.OnModsInit += RainWorld_OnModsInit;
         }
 
@@ -37,16 +36,13 @@ namespace d5vhealthbar
         {
             orig(self);
 
-            // 避免重复注册钩子
             if (_hooksRegistered) return;
             _hooksRegistered = true;
 
             try
             {
-                // 注册配置界面
                 MachineConnector.SetRegisteredOI(PluginGuid, new HealthBarConfig());
 
-                // 注册绘制和清理钩子
                 On.HUD.HUD.Draw += HUD_Draw;
                 On.RainWorldGame.ShutDownProcess += RainWorldGame_ShutDownProcess;
 
@@ -63,7 +59,6 @@ namespace d5vhealthbar
             if (!_isInit) return;
             _isInit = false;
 
-            // 取消订阅所有钩子
             try
             {
                 On.RainWorld.OnModsInit -= RainWorld_OnModsInit;
@@ -103,10 +98,8 @@ namespace d5vhealthbar
 
             try
             {
-                // 检查配置是否启用血条显示
                 if (HealthBarConfig.EnableHealthBars == null || !HealthBarConfig.EnableHealthBars.Value) return;
 
-                // 只在游戏正常运行时绘制血条
                 if (self == null || self.owner == null) return;
 
                 Player player = self.owner as Player;
